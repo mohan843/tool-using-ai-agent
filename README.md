@@ -1,16 +1,13 @@
 # Tool-Using AI Agent
 
-A small, dependency-free Python mini-project that demonstrates an agent routing requests to useful tools: a safe calculator, keyword search over sample notes, and a sandboxed local file reader. It is designed to be runnable and testable without API keys or external services.
-
-> This is a deterministic tool-use demonstration, not an LLM-powered conversational agent. The explicit routing and narrow tool interfaces make the agent's actions easy to inspect.
+A dependency-free Python mini-project that routes requests to three local tools: a safe calculator, keyword search over sample notes, and a sandboxed file reader. It runs without API keys or external services. This deterministic demo is not an LLM-powered conversational agent.
 
 ## Features
 
-- Arithmetic evaluation via a restricted Python syntax tree, never `eval`.
-- Case-insensitive search across `.txt` files in the local `data/` directory.
-- File reading restricted to the configured data directory and text-like file extensions.
-- Interactive REPL and one-shot command-line interface.
-- Unit tests using only Python's standard library.
+- Arithmetic parsed from a restricted syntax tree, never Python `eval`.
+- Case-insensitive keyword search of `.txt` files in `data/`.
+- File access constrained to the project data directory and `.txt`, `.md`, or `.csv` files.
+- One-shot command-line interface and standard-library unit tests.
 
 ## Setup
 
@@ -29,24 +26,36 @@ There are no third-party packages to install.
 
 ## Usage
 
-Start the interactive agent with `python agent.py`, then try `calc: 12 * (3 + 2)`, `search: RAG`, or `read: sample_notes.txt`. One-shot examples: `python agent.py "calc: 12 * (3 + 2)"`, `python agent.py "search: calculator"`, and `python agent.py "read: sample_notes.txt"`. The file reader supports `.txt`, `.md`, and `.csv` files placed under `data/`.
+Run a calculator request:
+
+```bash
+python agent.py 'calc: 12 * (3 + 2)'
+```
+
+Search the bundled sample data or read it directly:
+
+```bash
+python agent.py 'search: RAG'
+python agent.py 'read: sample_notes.txt'
+```
+
+Supported tool forms are `calc: EXPRESSION`, `search: TERM`, and `read: RELATIVE_PATH`. The calculator supports `+`, `-`, `*`, `/`, `//`, `%`, `**`, and parentheses.
 
 ## Tests
 
-Run `python -m unittest discover -s tests -v`. Tests cover arithmetic, operator restrictions, tool routing, local search, reading, and path-traversal protection.
-
-## Project layout
-
-```text
-.
-├── agent.py
-├── data/
-│   └── sample_notes.txt
-├── requirements.txt
-└── tests/
-    └── test_agent.py
+```bash
+python -m unittest discover -s tests -v
 ```
+
+The tests cover arithmetic, unsafe-expression rejection, tool routing, local search, file reading, and path-traversal protection.
+
+## Project files
+
+- `agent.py`: agent router and tool implementations
+- `data/sample_notes.txt`: example search/read corpus
+- `requirements.txt`: documents the Python version; no external dependencies
+- `tests/test_agent.py`: automated unit tests
 
 ## Safety notes
 
-The calculator only permits known AST node types and caps expression length, numeric literal size, and exponent magnitude. The file reader resolves requested paths and rejects paths outside its data directory. This is a learning example, not a security boundary for hostile multi-user environments.
+The calculator permits only known syntax-tree nodes and limits expression size, numeric literals, and exponents. The reader resolves requested paths and rejects anything outside its data directory. This is a learning example, not a security boundary for hostile multi-user environments.
