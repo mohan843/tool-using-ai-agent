@@ -1,0 +1,11 @@
+Tool-Using Agent Sample Notes
+
+An AI agent can select tools to complete a task. This project demonstrates an explicit router with three local tools.
+
+The calculator parses arithmetic into a restricted syntax tree and never calls Python eval.
+
+The search tool performs case-insensitive keyword search across text files in the local data directory.
+
+The file reader only opens supported text files inside the configured data directory. This boundary helps prevent path traversal.
+
+Retrieval-augmented generation (RAG) retrieves relevant passages before composing an answer. Local keyword search is a tiny retrieval building block; this demo does not call a language model.
